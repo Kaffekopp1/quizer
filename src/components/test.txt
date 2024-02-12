@@ -1,0 +1,36 @@
+// 	var apiEndpoint = "https://en.wikipedia.org/w/api.php";
+// 	var params =
+// 		"action=query&format=json&prop=revisions&titles=bo&formatversion=2&rvprop=content&rvslots=*";
+
+// 	/**
+// 	 * Send the request to get the images
+// 	 */
+// 	fetch(apiEndpoint + "?" + params + "&origin=*")
+// 		.then(function (response) {
+// 			return response.json();
+// 		})
+// 		.then(function (response) {
+// 			console.log(response);
+// 		});
+// }
+// https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=Pet_door&formatversion=2&rvprop=content&rvslots=*
+
+// fetch("https://en.wikipedia.org/api/rest_v1/page/summary/Example", {
+// 		method: "GET",
+// 		headers: {
+// 			"Content-Type": "application/json",
+// 			// Add other headers if needed
+// 		},
+// 		mode: "cors",
+// 		credentials: "same-origin", // or 'include' if you are dealing with cookies
+// 	})
+// 		.then(function (response) {
+// 			return response.json();
+// 		})
+// 		.then(function (response) {
+// 			var allimages = response.query.allimages; // Process the output to get the image names
+// 			Object.keys(allimages).forEach(function (key) {
+// 				console.log(allimages[key].name);
+// 			});
+// 		});
+// }
