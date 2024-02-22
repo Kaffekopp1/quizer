@@ -21,7 +21,7 @@ function getCategories() {
 
 // kolla när kategorin ändras och när det sker byt sida till quizet med den valda kategorin stringified
 // här hade det varit lämpligt att köra json stringify direkt men jag ville få med extra.
-watch(selectedCategory, (newX) => {
+watch(selectedCategory, () => {
 	router.push(`/Quiz/${selectedCategoryString.value}`);
 });
 getCategories();
@@ -30,7 +30,10 @@ getCategories();
 	<div>
 		<h2>Välj en kategori</h2>
 		<select v-model="selectedCategory">
-			<option v-for="option in categoru.trivia_categories" :value="{ option }">
+			<option
+				v-for="(option, index) in categoru.trivia_categories"
+				:key="index"
+				:value="{ option }">
 				{{ option.name }}
 			</option>
 		</select>

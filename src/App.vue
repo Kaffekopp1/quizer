@@ -1,15 +1,9 @@
 <script setup>
-import Header from "./components/Header.vue";
-import Footer from "./components/Footer.vue";
+import Header from "./components/Header-component.vue";
+import Footer from "./components/Footer-component.vue";
 
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
-import { useRoute } from "vue-router";
-import { useRouter } from "vue-router";
-
-const route = useRoute();
-const router = useRouter();
-let l = ref("test");
 let point = ref(0);
 function pointcollect(d) {
 	point.value = point.value + d;

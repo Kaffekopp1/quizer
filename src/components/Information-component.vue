@@ -1,7 +1,10 @@
 <script setup>
 import axios from "axios";
-import { ref, computed, watch, defineEmits } from "vue";
-let prop = defineProps({ skickadinfo: String, visa: Boolean });
+import { ref, watch, defineEmits } from "vue";
+let prop = defineProps({
+	skickadinfo: { type: String, default: "test" },
+	visa: Boolean,
+});
 let searchParams = ref([]);
 let infor = ref({});
 let shower = ref(false);
@@ -36,7 +39,7 @@ function getPage(page) {
 }
 
 // kolla om propen visa har ändras, gör den det hämta relevant information. givet att man tryckt på visa
-watch(prop, (newX) => {
+watch(prop, () => {
 	if (prop.visa) {
 		getinfo(prop.skickadinfo);
 	}
@@ -44,7 +47,6 @@ watch(prop, (newX) => {
 function hider() {
 	emit("hider");
 }
-const s = ref("https://www.wikipedia.org/wiki/");
 </script>
 <template>
 	<div v-show="prop.visa" class="infromation">
@@ -52,12 +54,12 @@ const s = ref("https://www.wikipedia.org/wiki/");
 		{{ prop.skickadinfo }}
 		<button class="hider" @click="hider">Close X</button>
 
-		<div v-for="(t, index) in searchParams">
+		<div v-for="(t, index) in searchParams" :key="index">
 			<h2>
 				{{ t.title }}
 			</h2>
 
-			<p v-html="t.snippet"></p>
+			<p v-html="t.snippet" />
 			<button v-show="!shower" @click="getPage(t.pageid)">Läs mer</button>
 			<div v-show="infor.pageid == t.pageid && shower">
 				<button @click="shower = false">hide text</button>

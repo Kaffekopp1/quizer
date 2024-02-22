@@ -3,29 +3,33 @@ import axios from "axios";
 import { ref, computed, watch, defineEmits } from "vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
-import Choose from "../components/Choose.vue";
-import Information from "../components/Information.vue";
+import Choose from "../components/Choose-component.vue";
+import Information from "../components/Information-component.vue";
 const router = useRouter();
-
 const route = useRoute();
 
-const quizQuestion = ref([]),quizPoints = ref(0), questionNumber = ref(0),finishQuiz = ref(false), answered = ref({
-	wasRight: true,
-	answered: false,
-	yourAnswer: "",
-}), visa= ref(false), loading = ref(false)
+const quizQuestion = ref([]),
+	quizPoints = ref(0),
+	questionNumber = ref(0),
+	finishQuiz = ref(false),
+	answered = ref({
+		wasRight: true,
+		answered: false,
+		yourAnswer: "",
+	}),
+	visa = ref(false),
+	loading = ref(false);
 const emit = defineEmits(["sendpoint"]);
-
 
 //skicka poängen till headern och visa att spelet är slut
 function sendpoint() {
-	answered.value.answered = false
+	answered.value.answered = false;
 	finishQuiz.value = true;
 	emit("sendpoint", quizPoints.value);
 }
 
 //nollställ poängen och starta ett nytt spel
-function nGame(){
+function nGame() {
 	quizPoints.value = 0;
 	questionNumber.value = 0;
 	finishQuiz.value = false;
@@ -45,31 +49,31 @@ function findCategory() {
 
 // Hämta frågor ifrån opentdb
 function getQuiz() {
-loading.value = true
+	loading.value = true;
 	let category = findCategory();
 	axios
 		.get(
 			`https://opentdb.com/api.php?amount=10&type=multiple&category=${category}`
 		)
-		.then((res) => {;
+		.then((res) => {
 			quizQuestion.value = res.data.results;
-			loading.value = false
+			loading.value = false;
 		})
 		.catch((error) => {
 			console.log("error", error);
 			alert(
-				`jag valde ett kinkigt api, alltid för många calls kolla här: ${error.message},men klicka på ok nedan så slussas du tillbaka till hem och kan välja igen`,router.push("/")
+				`jag valde ett kinkigt api, alltid för många calls kolla här: ${error.message},men klicka på ok nedan så slussas du tillbaka till hem och kan välja igen`,
+				router.push("/")
 			);
 		});
 }
 
-
 // fisher-yates för att blanda svaren
 function shuffelAnswers(ar) {
-	for (let i = ar.length - 1; i >0; i--){
-		const j = Math.floor(Math.random()* (i+1));
-		const temp = ar[i]
-		ar[i] = ar[j]
+	for (let i = ar.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		const temp = ar[i];
+		ar[i] = ar[j];
 		ar[j] = temp;
 	}
 	return ar;
@@ -94,6 +98,9 @@ const questionFixed = computed(() => {
 		});
 		//returnerar decodeQuiz för att svaren från api hade tecken som ska bort
 		return l;
+	} else {
+		let g = "";
+		return g;
 	}
 });
 
@@ -104,9 +111,9 @@ function answer(answ, que) {
 	// registrera att frågan är besvarad
 	answered.value.answered = true;
 	// kolla om svaret är korrekt
-	que.correctAnswer == answ ? (quizPoints.value++,
-		answered.value.wasRight = true) : (answered.value.yourAnswer = answ,
-		answered.value.wasRight = false)
+	que.correctAnswer == answ
+		? (quizPoints.value++, (answered.value.wasRight = true))
+		: ((answered.value.yourAnswer = answ), (answered.value.wasRight = false));
 
 	// ändra svaret till det snare
 	answered.value.yourAnswer = answ;
@@ -126,16 +133,15 @@ watch(questionNumber, (newX) => {
 //hämta ett quiz då sidan laddas
 getQuiz();
 // dölj info
-function hideInfo(){
-visa.value = ! visa.value
+function hideInfo() {
+	visa.value = !visa.value;
 }
 </script>
 
 <template>
 	<div v-if="loading">LADDAR.....</div>
 	<div v-else>
-
-		<h2 v-html="questionFixed[questionNumber]?.category"></h2>
+		<h2 v-html="questionFixed[questionNumber]?.category" />
 
 		fråga: {{ questionNumber }} av {{ questionFixed.length }} poäng:
 		{{ quizPoints }}
@@ -144,45 +150,47 @@ visa.value = ! visa.value
 				<h2>Grattis</h2>
 				<p>Du fick {{ quizPoints }} av {{ questionFixed.length }} rätt</p>
 				<button @click="nGame">spela</button>
-				<Choose></Choose>
+				<Choose />
 			</div>
 			<div
-			:class="{ wrong: !answered.wasRight, right: answered.wasRight }"
-			class="answeded"
-			v-if="answered.answered">
-			<div class="answeredTextContainer">
-				<p>Du svarade:</p>
-				<p v-html= "answered.yourAnswer" ></p>
-				<p>
-					rätt svar var:
-					<p v-html="answered.rightAnswer">
-					</p>
+				:class="{ wrong: !answered.wasRight, right: answered.wasRight }"
+				class="answeded"
+				v-if="answered.answered">
+				<div class="answeredTextContainer">
+					<p>Du svarade:</p>
+					<p v-html="answered.yourAnswer" />
+					<p>rätt svar var:</p>
+					<p v-html="answered.rightAnswer" />
 					<!--br kändes rimligt här:-->
-					<button @click="hideInfo" >Läs mer om: <br> <span v-html="answered.rightAnswer"></span></button>
-				</p>
-				<Information 	@hider="hideInfo"   :skickadinfo="answered.rightAnswer" :visa="visa"/>
+					<button @click="hideInfo">
+						Läs mer om: <br />
+						<span v-html="answered.rightAnswer" />
+					</button>
+					<Information
+						@hider="hideInfo"
+						:skickadinfo="answered.rightAnswer"
+						:visa="visa" />
+				</div>
+				<button
+					v-if="!finishQuiz"
+					@click="answered.answered = !answered.answered">
+					Nästa fråga
+				</button>
+				<button v-else @click="sendpoint">Klart</button>
 			</div>
-			<button
-			v-if="!finishQuiz"
-			@click="answered.answered = !answered.answered">
-			Nästa fråga
-		</button>
-		<button v-else @click="sendpoint">
-			Klart
-		</button>
+			<div v-else>
+				<h3 v-html="questionFixed[questionNumber]?.question" />
+				<div class="answerDiv">
+					<button
+						v-for="(quest, index) in questionFixed[questionNumber]?.answers"
+						@click="answer(quest, questionFixed[questionNumber])"
+						:key="index">
+						<p v-html="quest" />
+					</button>
+				</div>
+			</div>
+		</div>
 	</div>
-	<div v-else>
-		<h3 v-html="questionFixed[questionNumber]?.question"></h3>
-		<div class="answerDiv">
-			<button
-			v-for="quest in questionFixed[questionNumber]?.answers"
-			@click="answer(quest, questionFixed[questionNumber])">
-			<p v-html="quest"></p>
-		</button>
-	</div>
-</div>
-</div>
-</div>
 </template>
 <style scoped>
 .wrong {

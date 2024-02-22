@@ -1,7 +1,7 @@
 <script setup>
-import Choose from "../components/Choose.vue";
-const emit = defineEmits(["sendpoint", "quizPoints"]);
+import Choose from "../components/Choose-component.vue";
 </script>
+
 <template>
 	<div>
 		<h2>Hem</h2>

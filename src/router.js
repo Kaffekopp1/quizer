@@ -1,6 +1,6 @@
-import QuizMain from "./views/QuizMain.vue";
-import Hem from "./views/Hem.vue";
-import Contact from "./views/Contact.vue";
+import QuizMain from "./views/Quiz-main.vue";
+import Hem from "./views/Hem-view.vue";
+import Contact from "./views/Contact-view.vue";
 import { createRouter, createWebHistory } from "vue-router";
 export default createRouter({
 	history: createWebHistory(),

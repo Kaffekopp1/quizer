@@ -1,6 +1,4 @@
-<script setup>
-import { ref } from "vue";
-</script>
+<script setup></script>
 <template>
 	<h2>Contact</h2>
 	<p>Peter Zemturis</p>
