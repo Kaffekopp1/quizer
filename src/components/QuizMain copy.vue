@@ -9,7 +9,7 @@ const route = useRoute();
 
 // Accessing route parameters
 const routeParams = route.params;
-
+let s = "gerkgna";
 const quizQuestion = ref([]);
 const quizPoints = ref(0);
 const questionNumber = ref(0);
